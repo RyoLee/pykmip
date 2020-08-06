@@ -1,1 +1,1 @@
-pykmip-server -f server.conf  -l ./server.log -d /opt/data/kmip.mysql
+pykmip-server -d /var/run/pykmip/server.db
