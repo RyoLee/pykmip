@@ -5,6 +5,7 @@ RUN apt-get install git
 RUN git clone https://github.com/jzendle/pykmip.git
 RUN pip install PyKMIP
 RUN mkdir -p /etc/pykmip/certs;  mkdir /etc/pykmip/policies 
+RUN mkdir -p /var/log/pykmip;  chmod 777 /var/log/pykmip
 RUN cd pykmip \
 	&& tar zxvf crt.gz \ 
 	&& chmod +x run_server \ 
