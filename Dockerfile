@@ -1,26 +1,12 @@
-FROM python:3.7
+FROM alpine
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories &&\
+apk add python3-dev py3-pip py3-cryptography  py3-greenlet  &&\
+pip install --upgrade pip &&\
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn PyKMIP &&\
+mkdir -p /etc/pykmip/certs &&\
+mkdir -p /var/log/pykmip
+COPY ./pykmip/* /etc/pykmip/
 
-RUN apt-get install git
-
-RUN git clone https://github.com/jzendle/pykmip.git
-RUN pip install PyKMIP
-RUN mkdir -p /etc/pykmip/certs;  mkdir /etc/pykmip/policies 
-RUN mkdir -p /var/log/pykmip;  chmod 777 /var/log/pykmip
-RUN cd pykmip \
-	&& tar zxvf crt.gz \ 
-	&& chmod +x run_server \ 
-	&& cp certs/* /etc/pykmip/certs \
-	&& cp policies/* /etc/pykmip/policies \
-	&& cp server.conf /etc/pykmip/server.conf  \
-	&& cp client.conf /etc/pykmip/pykmip.conf \
-	&& mkdir -p /var/run/pykmip \
-	&& chmod 777 /var/run/pykmip \
-	&& mkdir -p /var/log/pykmip \
-	&& chmod 777 /var/log/pykmip 
-
-WORKDIR /pykmip
 EXPOSE 5696
 
-CMD ["sh","/pykmip/run_server"]
-
-
+CMD ["pykmip-server","-d","/etc/pykmip/server.db"]
